@@ -1,4 +1,6 @@
 # 『Goプログラミング実践入門』 例題
+(2026.1.25〜学習中)
+
 
 ![表紙](https://www.marlin-arms.com/jpn/arts/books-small/goweb.png)
 
