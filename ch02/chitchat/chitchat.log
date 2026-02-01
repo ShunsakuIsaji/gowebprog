@@ -1,0 +1,2 @@
+ERROR 2026/01/26 00:09:49 utils.go:101: sql: no rows in result set Cannot find user
+WARNING 2026/01/26 00:11:12 utils.go:106: <nil> Failed to get cookie
