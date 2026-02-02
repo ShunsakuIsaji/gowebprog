@@ -5,25 +5,11 @@ chapt.3を写経
 **/
 
 import (
-	"crypto/tls"
 	"fmt"
-	"log"
-	"net"
 	"net/http"
-	"time"
+	"reflect"
+	"runtime"
 )
-
-type Server struct {
-	Addr           string
-	Handler        http.Handler
-	ReadTimeout    time.Duration
-	WriteTimeout   time.Duration
-	MaxHeaderBytes int
-	TLSconfig      *tls.Config
-	TLSNextProto   map[string]func(*http.Server, *tls.Conn, http.Handler)
-	ConnState      func(net.Conn, http.ConnState)
-	ErrorLog       *log.Logger
-}
 
 /** ハンドラによってリクエストを処理する
 type MyHandler struct{}
@@ -63,11 +49,22 @@ func secondhandle(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "This is second handler, %s", r.URL.Path[1:])
 }
 
+// チェインさせるlog関数
+func log(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		name := runtime.FuncForPC(reflect.ValueOf(h).Pointer()).Name()
+		fmt.Println("Handler Function called -" + name)
+		fmt.Fprintf(w, "Logged by log function: %s", name)
+		// 元のハンドラ関数を呼び出す
+		h(w, r)
+	}
+}
+
 func main() {
 	server := http.Server{
 		Addr: ":8080",
 	}
-	http.HandleFunc("/first", firsthandle)
+	http.HandleFunc("/first", log(firsthandle))
 	http.HandleFunc("/second/", secondhandle)
 	server.ListenAndServe()
 }
