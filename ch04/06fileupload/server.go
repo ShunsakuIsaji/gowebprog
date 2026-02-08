@@ -3,7 +3,9 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	//io/ioutil は非推奨なのでioパッケージを使う
+	//"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -12,7 +14,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 	fileHeader := r.MultipartForm.File["uploaded"][0]
 	file, err := fileHeader.Open()
 	if err == nil {
-		data, err := ioutil.ReadAll(file)
+		data, err := io.ReadAll(file)
 		if err == nil {
 			fmt.Fprintln(w, string(data))
 		}
